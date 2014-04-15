@@ -5,19 +5,20 @@
 [Cut the Rope](http://www.cuttherope.net/)
 
 
-### Story?
+### Gamepley elements?
 * Zones
 * Bosses? (puzzle levels)
+* Time trial mode
+* Weekly challenge
 
 ### Control mechanism
-* Joystick?
+* Virtual Joystick?
 
 ### Technologies
 
 * Tile based game
 * box2D
 * libgdx
-* JSON based scenes. Select level style
 
 ### Modifiers
 * Reverse blocks
@@ -28,6 +29,11 @@
 ### Pickups
 * Coins
 * (All purchasables can be picked up in game)
+
+### Multiplayer
+* Leaderboard
+* Ghost times
+* Customise character
 
 ### Purchasable (with coins or iAP)
 * Spin faster
@@ -40,6 +46,16 @@
 * Time
 * Damage
 * Achievements
+
+### Achievements
+* Completed tutorial
+* Completed first level with 3 stars
+* Completed first zone with 3 stars
+* Completed nth zone with 3 stars
+* Completed all zones with 3 stars
+* Fastest weekly challenge time
+* 
+
 
 ### Extras
 * Daily returning bonus

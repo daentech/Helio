@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import uk.co.daentech.helio.HelioGame;
+import uk.co.daentech.helio.character.Helicopter;
 import uk.co.daentech.helio.level.LevelManager;
 import uk.co.daentech.helio.level.Levels;
 
@@ -16,10 +17,14 @@ public class BaseGameScreen implements Screen {
     protected OrthographicCamera camera;
 
     protected HelioGame game;
+    protected Helicopter character;
 
     public BaseGameScreen() {
         // Get game instance
         game = HelioGame.getInstance();
+
+        // Character
+        character = new Helicopter();
 
         // Setup camera
         camera = new OrthographicCamera();
@@ -36,7 +41,8 @@ public class BaseGameScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Game Screen ", 100, 150);
+        game.font.draw(game.batch, "Base Game Screen ", 100, 150);
+        game.font.draw(game.batch, "Override this for your level", 100, 190);
         game.batch.end();
     }
 
