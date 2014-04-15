@@ -3,7 +3,8 @@ package uk.co.daentech.helio.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import uk.co.daentech.helio.Helio;
+
+import uk.co.daentech.helio.HelioGame;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -14,6 +15,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                return new Helio();
+                return HelioGame.getInstance();
         }
 }

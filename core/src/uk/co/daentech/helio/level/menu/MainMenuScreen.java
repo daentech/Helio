@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uk.co.daentech.helio.HelioGame;
 import uk.co.daentech.helio.level.LevelManager;
@@ -15,6 +17,7 @@ import uk.co.daentech.helio.level.Levels;
 public class MainMenuScreen implements Screen {
 
     OrthographicCamera camera;
+    Viewport viewport;
 
     HelioGame game;
 
@@ -24,6 +27,7 @@ public class MainMenuScreen implements Screen {
 
         // Setup camera
         camera = new OrthographicCamera();
+        viewport = new ExtendViewport(800, 480, camera);
         camera.setToOrtho(false, 800, 480);
     }
 
