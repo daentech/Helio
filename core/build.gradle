@@ -4,6 +4,8 @@ sourceCompatibility = 1.6
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile 'com.squareup.retrofit:retrofit:1.5.0'
+
 }
 
 sourceSets.main.java.srcDirs = [ "src/" ]
