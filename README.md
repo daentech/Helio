@@ -1,8 +1,13 @@
 # Helio
 
 ## Inspiration
-[Kuru Kuru Kururin](http://game-oldies.com/play-online/kurukuru-kururin-nintendo-game-boy-advance)
-[Cut the Rope](http://www.cuttherope.net/)
+* [Kuru Kuru Kururin](http://game-oldies.com/play-online/kurukuru-kururin-nintendo-game-boy-advance)
+* [Cut the Rope](http://www.cuttherope.net/)
+
+## Project management
+
+* [Agile board](https://trello.com/b/HA4VFKLz/helio)
+* [Issues](https://github.com/daentech/Helio/issues)
 
 
 ### Gamepley elements?
@@ -10,6 +15,11 @@
 * Bosses? (puzzle levels)
 * Time trial mode
 * Weekly challenge
+
+#### Zones
+* Pong zone
+* Green hill inspired zone
+
 
 ### Control mechanism
 * Virtual Joystick?

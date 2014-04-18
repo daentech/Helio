@@ -5,7 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.co.daentech.helio.HelioGame;
+import uk.co.daentech.helio.base.Entity;
 import uk.co.daentech.helio.character.Helicopter;
 import uk.co.daentech.helio.level.LevelManager;
 import uk.co.daentech.helio.level.Levels;
@@ -19,16 +23,19 @@ public class BaseGameScreen implements Screen {
     protected HelioGame game;
     protected Helicopter character;
 
+    protected List<Entity> entities = new ArrayList<Entity>();
+
     public BaseGameScreen() {
         // Get game instance
         game = HelioGame.getInstance();
 
         // Character
-        character = new Helicopter();
+        character = new Helicopter(70, 70);
 
         // Setup camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+        entities.add(character);
     }
 
     @Override
@@ -37,12 +44,18 @@ public class BaseGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
+        for (Entity entity : entities) {
+            entity.update(delta);
+        }
 
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Base Game Screen ", 100, 150);
-        game.font.draw(game.batch, "Override this for your level", 100, 190);
+
+        for (Entity entity : entities) {
+            entity.render(game.batch);
+        }
+
         game.batch.end();
     }
 
