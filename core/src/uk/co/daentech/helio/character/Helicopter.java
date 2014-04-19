@@ -29,6 +29,6 @@ public class Helicopter extends Entity {
     public void update(float deltaTime) {
         super.update(deltaTime);
         this.rotation -= anglePerSecond * deltaTime;
-        this.position = this.position.mulAdd(InputHandler.getInstance().dragVector(), -0.05f);
+        this.position = this.position.mulAdd(InputHandler.getInstance().dragVector().limit(50f), -0.05f);
     }
 }
