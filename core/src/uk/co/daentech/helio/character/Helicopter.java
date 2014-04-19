@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import uk.co.daentech.helio.base.Entity;
+import uk.co.daentech.helio.controllers.InputHandler;
 
 import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
 
@@ -28,5 +29,6 @@ public class Helicopter extends Entity {
     public void update(float deltaTime) {
         super.update(deltaTime);
         this.rotation -= anglePerSecond * deltaTime;
+        this.position = this.position.mulAdd(InputHandler.getInstance().dragVector(), -0.05f);
     }
 }

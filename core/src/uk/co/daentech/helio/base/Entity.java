@@ -25,6 +25,7 @@ public class Entity {
     }
 
     public void update(float deltaTime) {
+        if (sprite == null) return;
         sprite.setPosition(position.x, position.y);
         sprite.setRotation(rotation);
     }

@@ -46,7 +46,8 @@ task copyAndroidNatives() {
 }
 
 task run(type: Exec) {
-    def adb = "$System.env.ANDROID_HOME/platform-tools/adb"
+    //def adb = "$System.env.ANDROID_HOME/platform-tools/adb"
+    def adb = "/Applications/Android Studio.app/sdk/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'uk.co.daentech.helio.android/uk.co.daentech.helio.android.AndroidLauncher'
 }
 
