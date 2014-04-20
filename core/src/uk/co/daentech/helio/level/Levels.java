@@ -8,5 +8,6 @@ public enum Levels {
     MAIN_MENU,
     SETTINGS,
     PURCHASE,
+    LEVEL1,
     GAME
 }

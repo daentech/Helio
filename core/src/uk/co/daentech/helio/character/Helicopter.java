@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import uk.co.daentech.helio.HelioGame;
 import uk.co.daentech.helio.base.Entity;
 import uk.co.daentech.helio.controllers.InputHandler;
 
@@ -16,11 +17,12 @@ public class Helicopter extends Entity {
 
     private static float anglePerSecond = 50.0f;
 
-    public Helicopter(float x, float y) {
-        super(x, y);
+    public Helicopter() {
+        super(10, 40);
 
         texture = new Texture(Gdx.files.internal("texture/player.png"));
         sprite = new Sprite(texture);
+        sprite.setScale(0.05f);
 
         texture.setFilter(Linear, Linear);
     }
@@ -29,6 +31,6 @@ public class Helicopter extends Entity {
     public void update(float deltaTime) {
         super.update(deltaTime);
         this.rotation -= anglePerSecond * deltaTime;
-        this.position = this.position.mulAdd(InputHandler.getInstance().dragVector().limit(50f), -0.05f);
+        this.position = this.position.mulAdd(InputHandler.getInstance().dragVector().limit(2f), -0.05f);
     }
 }

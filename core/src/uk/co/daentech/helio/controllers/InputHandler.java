@@ -45,6 +45,16 @@ public class InputHandler extends InputAdapter {
         return touchChange;
     }
 
+    public Vector3 dragVector3() {
+        if (!touching) {
+            return Vector3.Zero;
+        }
+        Vector3 touchChange = new Vector3(touchPos.x, touchPos.y, 0);
+        touchChange.sub(new Vector3(touchStartPos.x, touchStartPos.y, 0));
+        touchChange.x = -touchChange.x;
+        return touchChange;
+    }
+
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touching = true;

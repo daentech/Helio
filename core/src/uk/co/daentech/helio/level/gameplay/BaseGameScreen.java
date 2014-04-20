@@ -2,8 +2,14 @@ package uk.co.daentech.helio.level.gameplay;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,23 +34,33 @@ public class BaseGameScreen implements Screen {
 
     protected List<Entity> entities = new ArrayList<Entity>();
 
+    protected TiledMap map;
+    protected TiledMapRenderer tiledMapRenderer;
+    protected AssetManager assetManager;
+
+    private Vector2 unitVector = new Vector2(1,1);
+
     public BaseGameScreen() {
         // Get game instance
         game = HelioGame.getInstance();
 
         // Character
-        character = new Helicopter(70, 70);
+        character = new Helicopter();
         inputDebug = new InputDebug();
 
         // Setup camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, 30, 20);
+        //camera.translate(-5, 80);
         entities.add(character);
         //entities.add(inputDebug);
 
         // Setup the input processor
         InputHandler.getInstance().setCamera(camera);
         Gdx.input.setInputProcessor(InputHandler.getInstance());
+
+        assetManager = new AssetManager();
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
     }
 
     @Override
@@ -52,17 +68,23 @@ public class BaseGameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0.2f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.update();
         for (Entity entity : entities) {
             entity.update(delta);
         }
 
-        game.batch.setProjectionMatrix(camera.combined);
+        camera.position.set(character.position.x + 5, character.position.y + 50, 0);
+        camera.update();
 
+        if (tiledMapRenderer != null) {
+            tiledMapRenderer.setView(camera);
+            tiledMapRenderer.render();
+        }
+
+        game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
 
         for (Entity entity : entities) {
-            entity.render(game.batch);
+            entity.render();
         }
 
         game.batch.end();

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import uk.co.daentech.helio.HelioGame;
+
 /**
  * Created by dangilbert on 18/04/2014.
  */
@@ -30,8 +32,8 @@ public class Entity {
         sprite.setRotation(rotation);
     }
 
-    public void render(SpriteBatch batch) {
-        sprite.draw(batch);
+    public void render() {
+        sprite.draw(HelioGame.getInstance().batch);
     }
 
 }

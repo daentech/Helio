@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import java.util.HashMap;
 
 import uk.co.daentech.helio.level.gameplay.BaseGameScreen;
+import uk.co.daentech.helio.level.gameplay.Level1;
 import uk.co.daentech.helio.level.menu.MainMenuScreen;
 
 /**
@@ -27,6 +28,8 @@ public class LevelManager {
             case GAME:
                 screen = new BaseGameScreen();
                 break;
+            case LEVEL1:
+                screen = new Level1();
         }
 
         levels.put(level, screen);

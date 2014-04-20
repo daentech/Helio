@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
 
+import uk.co.daentech.helio.HelioGame;
 import uk.co.daentech.helio.base.Entity;
 import uk.co.daentech.helio.controllers.InputHandler;
 
@@ -22,9 +23,9 @@ public class InputDebug extends Entity {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render() {
         if (!InputHandler.getInstance().touching) return;
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.setProjectionMatrix(HelioGame.getInstance().batch.getProjectionMatrix());
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
         List<Vector2> points = InputHandler.getInstance().debugPoints();
