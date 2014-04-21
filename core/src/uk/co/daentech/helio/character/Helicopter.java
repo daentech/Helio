@@ -19,7 +19,7 @@ public class Helicopter extends Entity {
     private static float anglePerSecond = 50.0f;
 
     public Helicopter() {
-        super(10, 40);
+        super(10, -10);
 
         texture = new Texture(Gdx.files.internal("texture/player.png"));
         sprite = new Sprite(texture);

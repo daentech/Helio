@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class BaseGameScreen implements Screen {
 
     // Physics
     protected World world;
+    protected Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();;
 
     private Vector2 unitVector = new Vector2(1,1);
 
@@ -70,11 +72,12 @@ public class BaseGameScreen implements Screen {
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 
         // Physics init
-        //world = new World(Vector2.Zero, true);
+        // Don't let them sleep as we're moving them
+        world = new World(Vector2.Zero, false);
         // Add each wall to the world
-
-        // Add the character to the world
-        //world.createBody(new BodyDef());
+        for (Entity e : entities) {
+            e.initBodyDef(world);
+        }
     }
 
     @Override
@@ -102,6 +105,7 @@ public class BaseGameScreen implements Screen {
         }
 
         game.batch.end();
+        debugRenderer.render(world, camera.combined);
     }
 
     @Override
