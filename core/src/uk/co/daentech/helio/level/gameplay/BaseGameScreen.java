@@ -52,7 +52,7 @@ public class BaseGameScreen implements Screen {
     protected float cameraShakeTime;
     protected final float cameraShakeLimit = 0.3f;
     private boolean isShakingCamera;
-    private float cameraShakeViolence = 0.02f;
+    private float cameraShakeViolence = 0.04f;
 
 
     protected HelioGame game;
@@ -143,7 +143,7 @@ public class BaseGameScreen implements Screen {
         }
 
         game.batch.end();
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
 
         world.step(delta, 1, 1);
 
