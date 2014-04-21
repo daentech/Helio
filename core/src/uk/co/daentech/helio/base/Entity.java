@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -25,6 +26,7 @@ public class Entity {
 
     protected Texture texture;
     protected Sprite sprite;
+    protected String userDataString;
 
     protected BodyDef bodydef = new BodyDef();
     protected FixtureDef spriteShapeDef = new FixtureDef();
@@ -54,18 +56,20 @@ public class Entity {
         if (sprite == null) return;
 
         bodydef.angle = sprite.getRotation();
-        bodydef.type = BodyDef.BodyType.KinematicBody;
+        bodydef.type = BodyDef.BodyType.DynamicBody;
 
         spriteBody = world.createBody(bodydef);
+        spriteBody.setUserData(userDataString);
 
         PolygonShape spriteShape = new PolygonShape();
-        spriteShape.setAsBox(sprite.getWidth() * 0.02f, sprite.getHeight() * 0.025f);
+        spriteShape.setAsBox(sprite.getWidth() * 0.03125f, sprite.getHeight() * 0.025f);
 
         spriteShapeDef.shape = spriteShape;
         spriteShapeDef.density = 10.0f;
         spriteShapeDef.isSensor = true;
 
-        spriteBody.createFixture(spriteShapeDef);
+        Fixture f = spriteBody.createFixture(spriteShapeDef);
+        f.setUserData(userDataString);
     }
 
 }

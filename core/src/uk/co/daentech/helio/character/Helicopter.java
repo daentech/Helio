@@ -17,6 +17,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
 public class Helicopter extends Entity {
 
     private static float anglePerSecond = 50.0f;
+    private int direction = -1;
 
     public Helicopter() {
         super(10, -10);
@@ -31,7 +32,22 @@ public class Helicopter extends Entity {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        this.rotation -= anglePerSecond * deltaTime;
+        this.rotation -= direction * anglePerSecond * deltaTime;
         this.position = this.position.mulAdd(InputHandler.getInstance().dragVector().limit(2f), -0.05f);
+    }
+
+    public void bounceBack() {
+        this.rotation += direction * anglePerSecond * 0.1;
+    }
+
+    public void flipDirection() {
+        direction *= -1;
+    }
+
+    @Override
+    public void initBodyDef(World world) {
+        userDataString = "player";
+        super.initBodyDef(world);
+
     }
 }
