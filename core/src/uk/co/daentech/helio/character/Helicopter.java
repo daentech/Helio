@@ -3,6 +3,7 @@ package uk.co.daentech.helio.character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.World;
 
 import uk.co.daentech.helio.HelioGame;
 import uk.co.daentech.helio.base.Entity;

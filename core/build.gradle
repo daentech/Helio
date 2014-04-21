@@ -4,6 +4,7 @@ sourceCompatibility = 1.6
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     compile 'com.squareup.retrofit:retrofit:1.5.0'
 
 }

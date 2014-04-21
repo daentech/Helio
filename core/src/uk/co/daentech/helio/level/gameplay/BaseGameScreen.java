@@ -10,6 +10,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +37,13 @@ public class BaseGameScreen implements Screen {
 
     protected List<Entity> entities = new ArrayList<Entity>();
 
+    // Scene background
     protected TiledMap map;
     protected TiledMapRenderer tiledMapRenderer;
     protected AssetManager assetManager;
+
+    // Physics
+    protected World world;
 
     private Vector2 unitVector = new Vector2(1,1);
 
@@ -61,6 +68,13 @@ public class BaseGameScreen implements Screen {
 
         assetManager = new AssetManager();
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+
+        // Physics init
+        //world = new World(Vector2.Zero, true);
+        // Add each wall to the world
+
+        // Add the character to the world
+        //world.createBody(new BodyDef());
     }
 
     @Override

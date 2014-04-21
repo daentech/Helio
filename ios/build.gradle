@@ -7,6 +7,10 @@ ext {
 	mainClassName = "uk.co.daentech.helio.IOSLauncher"
 }
 
+dependencies {
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
+}
+
 // Extracts native libs (*.a) from the native-ios.jar and places them
 // under build/libs/ios/.
 task copyNatives << {
