@@ -1,7 +1,6 @@
 package uk.co.daentech.helio.controllers;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -21,6 +20,10 @@ public class InputHandler extends InputAdapter {
     private Vector2 touchStartPos = new Vector2();
     private Vector2 touchPos = new Vector2();
     private OrthographicCamera camera;
+
+    public boolean tapped;
+    public boolean dragged;
+    public Vector2 tapPos;
 
     protected InputHandler() {}
 
@@ -58,6 +61,9 @@ public class InputHandler extends InputAdapter {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touching = true;
+        dragged = false;
+        tapped = false;
+        tapPos = null;
         touchStartPos.x = screenX;
         touchStartPos.y = screenY;
         touchPos.x = screenX;
@@ -68,13 +74,21 @@ public class InputHandler extends InputAdapter {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         touching = false;
+        if (!dragged) {
+            tapped = true;
+            tapPos = new Vector2(screenX, screenY);
+        }
+        dragged = false;
         return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        dragged = true;
+        tapped = false;
         touchPos.x = screenX;
         touchPos.y = screenY;
+        TimerController.getInstance().startTimer();
         return true;
     }
 
@@ -85,5 +99,10 @@ public class InputHandler extends InputAdapter {
         points.add(touchStartPos);
         points.add(touchPos);
         return points;
+    }
+
+    public void handleTap() {
+        tapped = false;
+        tapPos = null;
     }
 }

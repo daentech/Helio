@@ -22,7 +22,7 @@ public class MainMenuScreen implements Screen {
     HelioGame game;
 
     public MainMenuScreen() {
-        // Get game instance
+        // Get game getInstance
         game = HelioGame.getInstance();
 
         // Setup camera

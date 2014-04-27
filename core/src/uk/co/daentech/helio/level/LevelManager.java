@@ -5,7 +5,7 @@ import com.badlogic.gdx.Screen;
 import java.util.HashMap;
 
 import uk.co.daentech.helio.level.gameplay.BaseGameScreen;
-import uk.co.daentech.helio.level.gameplay.Level1;
+import uk.co.daentech.helio.level.gameplay.levels.zone1.Level1;
 import uk.co.daentech.helio.level.menu.MainMenuScreen;
 
 /**

@@ -1,7 +1,9 @@
-package uk.co.daentech.helio.level.gameplay;
+package uk.co.daentech.helio.level.gameplay.levels.zone1;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+
+import uk.co.daentech.helio.level.gameplay.BaseGameScreen;
 
 
 /**

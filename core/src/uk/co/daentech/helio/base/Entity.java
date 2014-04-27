@@ -24,6 +24,9 @@ public class Entity {
     public float rotation;
     public Vector2 velocity;
 
+    // Initial data for reset
+    private Vector2 initialPosition;
+
     protected Texture texture;
     protected Sprite sprite;
     protected String userDataString;
@@ -71,5 +74,13 @@ public class Entity {
         Fixture f = spriteBody.createFixture(spriteShapeDef);
         f.setUserData(userDataString);
     }
+
+    //region State management
+
+    public void reset() {
+        sprite.setPosition(initialPosition.x, initialPosition.y);
+    }
+
+    //endregion
 
 }

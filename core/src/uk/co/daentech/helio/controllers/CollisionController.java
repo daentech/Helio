@@ -1,6 +1,7 @@
 package uk.co.daentech.helio.controllers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.utils.Array;
 
 import uk.co.daentech.helio.base.Entity;
@@ -22,6 +24,7 @@ public class CollisionController implements ContactListener{
     protected CollisionController() {}
 
     public boolean hasCollided;
+    public Vector2 bestAction;
     public Fixture collidedWith;
 
     public static CollisionController getInstance() {
@@ -38,13 +41,18 @@ public class CollisionController implements ContactListener{
             // We have collided not with the player, so ignore
             return;
         }
-        //Gdx.app.log("Collision detected", "A: " + contact.getFixtureA().getUserData() + " B: " + contact.getFixtureB().getUserData());
         hasCollided = true;
         if (contact.getFixtureA().getUserData().equals("player")) {
             collidedWith = contact.getFixtureB();
         } else {
             collidedWith = contact.getFixtureA();
         }
+
+        float normalLength = 0.1f;
+        WorldManifold worldManifold = contact.getWorldManifold();
+        Vector2 normalStart = worldManifold.getPoints()[0].sub(worldManifold.getNormal().scl(normalLength));
+        Vector2 normalEnd = worldManifold.getPoints()[0].add(worldManifold.getNormal().scl(normalLength));
+        bestAction = normalStart.sub(normalEnd);
     }
 
     @Override
@@ -60,6 +68,9 @@ public class CollisionController implements ContactListener{
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
+    }
 
+    public boolean collidedWith(String name){
+        return collidedWith.getUserData().equals(name);
     }
 }

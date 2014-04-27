@@ -1,6 +1,7 @@
 package uk.co.daentech.helio.level.gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -9,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -24,20 +24,19 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import uk.co.daentech.helio.HelioGame;
 import uk.co.daentech.helio.base.Entity;
 import uk.co.daentech.helio.character.Helicopter;
 import uk.co.daentech.helio.controllers.CollisionController;
+import uk.co.daentech.helio.controllers.GameStateController;
 import uk.co.daentech.helio.controllers.InputHandler;
-import uk.co.daentech.helio.level.LevelManager;
-import uk.co.daentech.helio.level.Levels;
+import uk.co.daentech.helio.controllers.OSDController;
+import uk.co.daentech.helio.controllers.TextureManager;
 import uk.co.daentech.helio.utils.InputDebug;
 
 /**
@@ -73,8 +72,9 @@ public class BaseGameScreen implements Screen {
     private Vector2 unitVector = new Vector2(1,1);
 
     public BaseGameScreen() {
-        // Get game instance
+        // Get game getInstance
         game = HelioGame.getInstance();
+
 
         // Character
         character = new Helicopter();
@@ -88,7 +88,10 @@ public class BaseGameScreen implements Screen {
 
         // Setup the input processor
         InputHandler.getInstance().setCamera(camera);
-        Gdx.input.setInputProcessor(InputHandler.getInstance());
+        InputMultiplexer im = new InputMultiplexer();
+        im.addProcessor(OSDController.getInstance().stage);
+        im.addProcessor(InputHandler.getInstance());
+        Gdx.input.setInputProcessor(im);
 
         assetManager = new AssetManager();
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
@@ -109,6 +112,48 @@ public class BaseGameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        switch (GameStateController.getInstance().getState()) {
+            case PLAYING:
+                updatePlaying(delta);
+                break;
+        }
+
+        if (tiledMapRenderer != null) {
+            tiledMapRenderer.setView(camera);
+            tiledMapRenderer.render();
+        }
+
+        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
+
+        for (Entity entity : entities) {
+            entity.render();
+        }
+        game.batch.end();
+
+        // Render the onscreen controls
+        OSDController.getInstance().render(delta);
+
+        if (GameStateController.getInstance().getState() == GameStateController.State.PAUSED) {
+            // Render the pause menu over the top
+        }
+
+
+
+        // Only update the collisions if we're playing
+        if(GameStateController.getInstance().getState() == GameStateController.State.PLAYING) {
+            world.step(delta, 1, 1);
+
+            if(CollisionController.getInstance().hasCollided) {
+                isShakingCamera = true;
+                character.collide();
+            } else {
+
+            }
+        }
+    }
+
+    private void updatePlaying(float delta) {
         for (Entity entity : entities) {
             entity.update(delta);
         }
@@ -129,32 +174,6 @@ public class BaseGameScreen implements Screen {
             cameraShakeTime = 0f;
         }
         camera.update();
-
-        if (tiledMapRenderer != null) {
-            tiledMapRenderer.setView(camera);
-            tiledMapRenderer.render();
-        }
-
-        game.batch.setProjectionMatrix(camera.combined);
-        game.batch.begin();
-
-        for (Entity entity : entities) {
-            entity.render();
-        }
-
-        game.batch.end();
-        //debugRenderer.render(world, camera.combined);
-
-        world.step(delta, 1, 1);
-
-        if(CollisionController.getInstance().hasCollided) {
-            isShakingCamera = true;
-            character.bounceBack();
-            character.flipDirection();
-        } else {
-
-        }
-
     }
 
     public void setupWalls() {
@@ -199,6 +218,21 @@ public class BaseGameScreen implements Screen {
         }
     }
 
+    //region Game State
+
+    public void reset() {
+        //Reset the game state
+        GameStateController.getInstance().setState(GameStateController.State.PLAYING);
+        // Reset each entity's data
+        for (Entity e : entities) {
+            e.reset();
+        }
+    }
+
+    //endregion
+
+    //region Application state
+
     @Override
     public void resize(int width, int height) {
 
@@ -228,4 +262,6 @@ public class BaseGameScreen implements Screen {
     public void dispose() {
 
     }
+
+    //endregion
 }
