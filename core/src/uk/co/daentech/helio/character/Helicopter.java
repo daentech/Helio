@@ -3,6 +3,7 @@ package uk.co.daentech.helio.character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import uk.co.daentech.helio.base.Entity;
@@ -11,6 +12,8 @@ import uk.co.daentech.helio.controllers.GameStateController;
 import uk.co.daentech.helio.controllers.InputHandler;
 
 import static com.badlogic.gdx.graphics.Texture.TextureFilter.Linear;
+import static uk.co.daentech.helio.controllers.GameStateController.State.COMPLETED;
+import static uk.co.daentech.helio.controllers.GameStateController.State.DIED;
 
 /**
  * Created by dangilbert on 15/04/2014.
@@ -23,6 +26,8 @@ public class Helicopter extends Entity {
     private static int MAX_HEALTH = 5;
     private static int INITIAL_HEALTH = 3;
     private int health = 3;
+
+    private Vector2 target;
 
 
     public Helicopter() {
@@ -44,8 +49,19 @@ public class Helicopter extends Entity {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        this.rotation -= direction * anglePerSecond * deltaTime;
-        this.position = this.position.mulAdd(InputHandler.getInstance().dragVector().limit(2f), -0.05f);
+        switch (GameStateController.getInstance().getState()) {
+            case PLAYING:
+                this.rotation -= direction * anglePerSecond * deltaTime;
+                this.position = this.position.mulAdd(InputHandler.getInstance().dragVector().limit(2f), -0.05f);
+                break;
+            case COMPLETED:
+                this.rotation -= direction * anglePerSecond * deltaTime * 10;
+                Gdx.app.log("Character position", this.position.toString());
+                Gdx.app.log("Target position", target.toString());
+                this.position.lerp(target, 0.1f);
+                break;
+        }
+
     }
 
     //region Collision
@@ -53,7 +69,7 @@ public class Helicopter extends Entity {
     public void collide() {
         if (CollisionController.getInstance().collidedWith("finish")) {
             // Show level complete
-            GameStateController.getInstance().setState(GameStateController.State.COMPLETED);
+            GameStateController.getInstance().setState(COMPLETED);
             return;
         }
 
@@ -77,10 +93,10 @@ public class Helicopter extends Entity {
     public void bounceBack() {
         // If no collision, return
         if (CollisionController.getInstance().collidedWith == null) return;
-        // Vector between collision points
-        //Gdx.app.log("Collision normal vector", CollisionController.getInstance().bestAction.toString());
-        this.position.add(CollisionController.getInstance().bestAction);
-        this.rotation += direction * anglePerSecond * 0.1;
+        //TODO bounce away from the wall
+
+        // TODO bounce in the correct direction
+        this.rotation += direction * anglePerSecond * 0.5;
     }
 
     public void flipDirection() {
@@ -89,8 +105,6 @@ public class Helicopter extends Entity {
 
     //endregion
 
-
-
     @Override
     public void initBodyDef(World world) {
         userDataString = "player";
@@ -98,14 +112,18 @@ public class Helicopter extends Entity {
 
     }
 
+    public void setTarget(Vector2 target) {
+        this.target = target;
+    }
+
     //region Health Management
 
     public void decreaseHealth() {
-        health--;
+        //health--;
 
         if (health == 0) {
             // Send an event to say we have died
-            GameStateController.getInstance().setState(GameStateController.State.DIED);
+            GameStateController.getInstance().setState(DIED);
         }
     }
 

@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import uk.co.daentech.helio.HelioGame;
 
+import static uk.co.daentech.helio.controllers.GameStateController.State.PLAYING;
+
 /**
  * Created by dangilbert on 27/04/2014.
  */
@@ -31,7 +33,7 @@ public class TimerController extends Actor {
     private boolean playerBegun;
 
     public void act(float delta) {
-        if (GameStateController.getInstance().getState() == GameStateController.State.PLAYING) {
+        if (GameStateController.getInstance().is(PLAYING)) {
             if (playerBegun) {
                 time += delta;
                 float timeTmp = time * 1000;

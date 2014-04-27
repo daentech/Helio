@@ -5,6 +5,10 @@ package uk.co.daentech.helio.controllers;
  */
 public class GameStateController {
 
+    public boolean is(State state) {
+        return this.state == state;
+    }
+
     public static enum State {
         PLAYING,
         PAUSED,

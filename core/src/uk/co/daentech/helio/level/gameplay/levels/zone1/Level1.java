@@ -19,5 +19,7 @@ public class Level1 extends BaseGameScreen {
         tiledMapRenderer.setView(camera);
 
         setupWalls();
+        setupStartAndEnd();
+        character.setTarget(end);
     }
 }

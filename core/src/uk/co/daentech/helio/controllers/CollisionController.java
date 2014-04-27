@@ -1,18 +1,10 @@
 package uk.co.daentech.helio.controllers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
-import com.badlogic.gdx.utils.Array;
-
-import uk.co.daentech.helio.base.Entity;
 
 /**
  * Created by dangilbert on 21/04/2014.
@@ -24,7 +16,6 @@ public class CollisionController implements ContactListener{
     protected CollisionController() {}
 
     public boolean hasCollided;
-    public Vector2 bestAction;
     public Fixture collidedWith;
 
     public static CollisionController getInstance() {
@@ -47,12 +38,6 @@ public class CollisionController implements ContactListener{
         } else {
             collidedWith = contact.getFixtureA();
         }
-
-        float normalLength = 0.1f;
-        WorldManifold worldManifold = contact.getWorldManifold();
-        Vector2 normalStart = worldManifold.getPoints()[0].sub(worldManifold.getNormal().scl(normalLength));
-        Vector2 normalEnd = worldManifold.getPoints()[0].add(worldManifold.getNormal().scl(normalLength));
-        bestAction = normalStart.sub(normalEnd);
     }
 
     @Override

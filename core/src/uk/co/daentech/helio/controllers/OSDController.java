@@ -12,6 +12,9 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import uk.co.daentech.helio.HelioGame;
 
+import static uk.co.daentech.helio.controllers.GameStateController.State.PAUSED;
+import static uk.co.daentech.helio.controllers.GameStateController.State.PLAYING;
+
 /**
  * Created by dangilbert on 27/04/2014.
  */
@@ -46,10 +49,10 @@ public class OSDController {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (GameStateController.getInstance().getState() == GameStateController.State.PAUSED) {
-                    GameStateController.getInstance().setState(GameStateController.State.PLAYING);
+                if (GameStateController.getInstance().is(PAUSED)) {
+                    GameStateController.getInstance().setState(PLAYING);
                 } else {
-                    GameStateController.getInstance().setState(GameStateController.State.PAUSED);
+                    GameStateController.getInstance().setState(PAUSED);
                 }
 
             }

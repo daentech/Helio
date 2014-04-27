@@ -39,6 +39,10 @@ import uk.co.daentech.helio.controllers.OSDController;
 import uk.co.daentech.helio.controllers.TextureManager;
 import uk.co.daentech.helio.utils.InputDebug;
 
+import static uk.co.daentech.helio.controllers.GameStateController.State.COMPLETED;
+import static uk.co.daentech.helio.controllers.GameStateController.State.PAUSED;
+import static uk.co.daentech.helio.controllers.GameStateController.State.PLAYING;
+
 /**
  * Created by dangilbert on 15/04/2014.
  */
@@ -67,7 +71,9 @@ public class BaseGameScreen implements Screen {
 
     // Physics
     protected World world;
-    protected Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();;
+    protected Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+
+    protected Vector2 end;
 
     private Vector2 unitVector = new Vector2(1,1);
 
@@ -114,6 +120,7 @@ public class BaseGameScreen implements Screen {
 
         switch (GameStateController.getInstance().getState()) {
             case PLAYING:
+            case COMPLETED:
                 updatePlaying(delta);
                 break;
         }
@@ -134,18 +141,20 @@ public class BaseGameScreen implements Screen {
         // Render the onscreen controls
         OSDController.getInstance().render(delta);
 
-        if (GameStateController.getInstance().getState() == GameStateController.State.PAUSED) {
+        if (GameStateController.getInstance().is(PAUSED)) {
             // Render the pause menu over the top
+        } else if (GameStateController.getInstance().is(COMPLETED)) {
+            // Render the completion stage
         }
 
-
-
         // Only update the collisions if we're playing
-        if(GameStateController.getInstance().getState() == GameStateController.State.PLAYING) {
+        if(GameStateController.getInstance().is(PLAYING)) {
             world.step(delta, 1, 1);
 
             if(CollisionController.getInstance().hasCollided) {
-                isShakingCamera = true;
+                if(CollisionController.getInstance().collidedWith("wall")) {
+                    isShakingCamera = true;
+                }
                 character.collide();
             } else {
 
@@ -159,7 +168,8 @@ public class BaseGameScreen implements Screen {
         }
 
         camera.position.set(character.position.x + 5, character.position.y + 50, 0);
-        if (isShakingCamera) {
+        if (GameStateController.getInstance().is(PLAYING)
+                && isShakingCamera) {
             cameraShakeTime += delta;
             if((cameraShakeTime * 100) % 10 > 8) {
                 camera.translate(cameraShakeViolence, -cameraShakeViolence);
@@ -176,6 +186,26 @@ public class BaseGameScreen implements Screen {
         camera.update();
     }
 
+    //region Map Setup
+
+    public void setupStartAndEnd() {
+        MapLayers layers = map.getLayers();
+        MapLayer start = layers.get("Start");
+        MapLayer end = layers.get("End");
+
+        if (start != null) {
+            for (MapObject o : start.getObjects()) {
+                setupBody(o, "start");
+            }
+        }
+
+        if (end != null) {
+            for (MapObject o : end.getObjects()) {
+                setupBody(o, "finish");
+            }
+        }
+    }
+
     public void setupWalls() {
         MapLayers layers = map.getLayers();
         MapLayer wallObjects = layers.get("WallObjects");
@@ -184,45 +214,54 @@ public class BaseGameScreen implements Screen {
         if (wallObjects == null) return;
 
         for (MapObject o : wallObjects.getObjects()) {
-            BodyDef bd = new BodyDef();
-            bd.type = BodyDef.BodyType.StaticBody;
-            Body body = world.createBody(bd);
-
-            FixtureDef fd = new FixtureDef();
-            PolygonShape ps = new PolygonShape();
-            if (o instanceof RectangleMapObject) {
-                Rectangle r = ((RectangleMapObject) o).getRectangle();
-                Vector2 center = new Vector2(
-                        (r.getX() + r.getWidth()/2) / tileWidth,
-                        (r.getY() + r.getHeight() / 2)/ tileHeight);
-                ps.setAsBox(r.getWidth() / tileWidth / 2,
-                        r.getHeight() / tileHeight / 2,
-                        center,
-                        0);
-            } else if (o instanceof PolygonMapObject) {
-                Polygon p = ((PolygonMapObject) o).getPolygon();
-                p.setScale(0.0625f, 0.0625f);
-                p.setPosition(p.getX()/tileWidth,
-                        p.getY()/tileHeight);
-                ps.set(p.getTransformedVertices());
-            }
-
-            fd.shape = ps;
-            fd.isSensor = true;
-            fd.density = 10.0f;
-
-            Fixture f = body.createFixture(fd);
-            body.setUserData("wall");
-            f.setUserData("wall");
-
+           setupBody(o, "wall");
         }
     }
+
+    private void setupBody(MapObject o, String name) {
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.StaticBody;
+        Body body = world.createBody(bd);
+
+        FixtureDef fd = new FixtureDef();
+        PolygonShape ps = new PolygonShape();
+        if (o instanceof RectangleMapObject) {
+            Rectangle r = ((RectangleMapObject) o).getRectangle();
+            Vector2 center = new Vector2(
+                    (r.getX() + r.getWidth()/2) / tileWidth,
+                    (r.getY() + r.getHeight() / 2)/ tileHeight);
+            ps.setAsBox(r.getWidth() / tileWidth / 2,
+                    r.getHeight() / tileHeight / 2,
+                    center,
+                    0);
+
+            if(name.equals("finish")) {
+                end = center;
+            }
+        } else if (o instanceof PolygonMapObject) {
+            Polygon p = ((PolygonMapObject) o).getPolygon();
+            p.setScale(0.0625f, 0.0625f);
+            p.setPosition(p.getX()/tileWidth,
+                    p.getY()/tileHeight);
+            ps.set(p.getTransformedVertices());
+        }
+
+        fd.shape = ps;
+        fd.isSensor = true;
+        fd.density = 10.0f;
+
+        Fixture f = body.createFixture(fd);
+        body.setUserData(name);
+        f.setUserData(name);
+    }
+
+    //endregion
 
     //region Game State
 
     public void reset() {
         //Reset the game state
-        GameStateController.getInstance().setState(GameStateController.State.PLAYING);
+        GameStateController.getInstance().setState(PLAYING);
         // Reset each entity's data
         for (Entity e : entities) {
             e.reset();
