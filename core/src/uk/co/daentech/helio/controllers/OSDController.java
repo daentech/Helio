@@ -43,7 +43,7 @@ public class OSDController {
         stage = new Stage(viewport, HelioGame.getInstance().batch);
         pause = new Image(TextureManager.pauseButton);
 
-        pause.setPosition(, 210);
+        pause.setPosition(315, 210);
         pause.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
