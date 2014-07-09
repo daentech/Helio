@@ -25,6 +25,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,7 @@ public class BaseGameScreen implements Screen {
     protected HelioGame game;
     protected Helicopter character;
     protected InputDebug inputDebug;
+    protected Viewport viewport;
 
     protected List<Entity> entities = new ArrayList<Entity>();
 
@@ -89,6 +92,7 @@ public class BaseGameScreen implements Screen {
         // Setup camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 30, 20);
+        viewport = new ExtendViewport(30, 20, camera);
 
         entities.add(character);
 
@@ -274,7 +278,8 @@ public class BaseGameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height);
+        OSDController.getInstance().resize(width, height);
     }
 
     @Override
