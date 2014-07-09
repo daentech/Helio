@@ -1,5 +1,5 @@
 android {
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
     compileSdkVersion 19
     sourceSets {
         main {
@@ -52,7 +52,7 @@ task copyAndroidNatives() {
     }
 }
 
-task run(type: Exec) {
+task runAndroid(type: Exec) {
     //def adb = "$System.env.ANDROID_HOME/platform-tools/adb"
     def adb = "/Applications/Android Studio.app/sdk/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'uk.co.daentech.helio.android/uk.co.daentech.helio.android.AndroidLauncher'
