@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uk.co.daentech.helio.HelioGame;
 
@@ -21,6 +22,8 @@ import static uk.co.daentech.helio.controllers.GameStateController.State.PLAYING
 public class OSDController {
 
     private static OSDController instance;
+
+    private Viewport viewport;
 
     private Image pause;
 
@@ -36,11 +39,11 @@ public class OSDController {
     public Stage stage;
 
     private void init() {
-        stage = new Stage(new ExtendViewport(640, 320), HelioGame.getInstance().batch);
-        float screenWidth = Gdx.graphics.getWidth() - 40;
-        float screenHeight = Gdx.graphics.getHeight() - 40;
+        viewport = new ExtendViewport(320, 240);
+        stage = new Stage(viewport, HelioGame.getInstance().batch);
         pause = new Image(TextureManager.pauseButton);
-        pause.setPosition(screenWidth, screenHeight);
+
+        pause.setPosition(, 210);
         pause.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -67,5 +70,10 @@ public class OSDController {
         stage.act(delta);
         stage.draw();
     }
+
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
+
 
 }
